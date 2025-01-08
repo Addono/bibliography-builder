@@ -1,0 +1,38 @@
+.container {
+}
+
+.dropZone {
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  padding: 1rem;
+  background-color: transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropZone:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+  border-color: #0056b3;
+}
+
+.dropZoneDragging {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.fileInput {
+  display: none;
+}
+
+.error {
+  color: red;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}

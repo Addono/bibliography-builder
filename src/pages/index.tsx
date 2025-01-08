@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
 import { Spinner } from "../components/Spinner"
 import StyleSelector from "../components/StyleSelector"
+import { JsonFileSelector } from "../components/JsonFileSelector"
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null)
@@ -38,18 +39,7 @@ function HomePage() {
     <div>
       <h1>Bibliography Builder</h1>
       <form onSubmit={(e) => e.preventDefault()}>
-        <div style={{ marginBottom: "1rem" }}>
-          <label htmlFor="json-input" style={{ display: "block", marginBottom: "0.5rem" }}>
-            Citations JSON file:
-          </label>
-          <input
-            id="json-input"
-            type="file"
-            accept=".json"
-            onChange={(e) => setJsonFile(e.target.files?.[0] || null)}
-          />
-        </div>
-
+        <JsonFileSelector onFileChange={setJsonFile} />
         <StyleSelector onStyleChange={setSelectedStyle} />
       </form>
 
