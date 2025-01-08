@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 
-import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
 import { Spinner } from "../components/Spinner"
 import StyleSelector from "../components/StyleSelector"
 import { JsonFileSelector } from "../components/JsonFileSelector"
+import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null)
