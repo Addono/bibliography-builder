@@ -8,9 +8,9 @@ export class UnsupportedCslError extends Error {
   }
 }
 
-export function groupAndSortCitations(cslData: any[]): { groups: Record<string, any[]>; sortedKeys: string[] } {
-  const groupedData: Record<string, any[]> = {}
-  cslData.forEach((entry: any) => {
+export function groupAndSortCitations(cslData: unknown[]): { groups: Record<string, unknown[]>; sortedKeys: string[] } {
+  const groupedData: Record<string, unknown[]> = {}
+  cslData.forEach((entry: unknown) => {
     if (entry.archive_location) {
       if (!groupedData[entry.archive_location]) {
         groupedData[entry.archive_location] = []
@@ -48,7 +48,7 @@ export async function registerCustomTemplateFromFile(file: File): Promise<string
 }
 
 export async function generateHtml(
-  groups: Record<string, any[]>,
+  groups: Record<string, unknown[]>,
   sortedKeys: string[],
   templateName: string,
 ): Promise<string> {
@@ -84,7 +84,7 @@ export async function generateHtml(
 }
 
 export async function generateBibliography(
-  groups: Record<string, any[]>,
+  groups: Record<string, unknown[]>,
   sortedKeys: string[],
   templateName: string,
 ): Promise<string> {
