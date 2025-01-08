@@ -9,13 +9,13 @@ import StyleSelector from '../components/StyleSelector';
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<string>('apa');
+  const [selectedStyle, setSelectedStyle] = useState<string | null>('apa');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleGenerate() {
     try {
-      if (!jsonFile) return;
+      if (!jsonFile || !selectedStyle) return;
       setIsLoading(true);
       const jsonData = await jsonFile.text();
       const cslData = JSON.parse(jsonData);

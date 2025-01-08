@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { registerCustomTemplateFromFile } from '../lib/businessLogic';
 
 type StyleType = 'built-in' | 'custom';
 type BuiltInStyle = 'apa' | 'vancouver' | 'harvard1';
+type CustomStyle = string;
 
 interface StyleSelectorProps {
-  onStyleChange: (newStyle: string) => void;
+  onStyleChange: (newStyle: string | null) => void;
 }
 
 export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
   const [styleType, setStyleType] = useState<StyleType>('built-in');
-  const [selectedStyle, setSelectedStyle] = useState<BuiltInStyle>('apa');
+  const [selectedStyle, setSelectedStyle] = useState<BuiltInStyle | CustomStyle | null>('apa');
   const [cslFile, setCslFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (styleType === 'built-in') {
       onStyleChange(selectedStyle);
     } else if (cslFile) {
-      onStyleChange(cslFile.name);
+      // Infer the style from the file name
+      registerCustomTemplateFromFile(cslFile)
+        .then(onStyleChange);
+    } else {
+      onStyleChange(null);
     }
   }, [styleType, selectedStyle, cslFile, onStyleChange]);
 
@@ -42,7 +48,7 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
           </label>
           <select
             id="built-in-style"
-            value={selectedStyle}
+            value={selectedStyle || ''}
             onChange={(e) => setSelectedStyle(e.target.value as BuiltInStyle)}
           >
             <option value="apa">APA</option>
