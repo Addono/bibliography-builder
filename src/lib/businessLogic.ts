@@ -43,16 +43,8 @@ export async function registerCustomTemplateFromXml(templateXml: string): Promis
 }
 
 export async function registerCustomTemplateFromFile(file: File): Promise<string> {
-  const templateName = 'custom';
   const templateXml = await file.text();
-  if (await isDependentCslStyle(templateXml)) {
-    throw new UnsupportedCslError(
-      'The provided CSL file appears to be an dependent style. Please use an independent style.'
-    );
-  }
-  const config = plugins.config.get('@csl');
-  config.templates.add(templateName, templateXml);
-  return templateName;
+  return registerCustomTemplateFromXml(templateXml);
 }
 
 export async function generateHtml(
