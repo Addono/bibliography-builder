@@ -3,13 +3,13 @@ import { Spinner } from '../components/Spinner';
 import {
   UnsupportedCslError,
   groupAndSortCitations,
-  registerCustomTemplateFromFile,
   generateBibliography
 } from '../lib/businessLogic';
+import StyleSelector from '../components/StyleSelector';
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null);
-  const [cslFile, setCslFile] = useState<File | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<string>('apa');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,10 +21,7 @@ function HomePage() {
       const cslData = JSON.parse(jsonData);
       const { groups, sortedKeys } = groupAndSortCitations(cslData);
 
-      let templateName = 'harvard1';
-      if (cslFile) {
-        templateName = await registerCustomTemplateFromFile(cslFile);
-      }
+      const templateName: string = selectedStyle;
 
       const result = await generateBibliography(groups, sortedKeys, templateName);
       setOutput(result);
@@ -55,21 +52,13 @@ function HomePage() {
           />
         </div>
         
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="csl-input" style={{ display: 'block', marginBottom: '0.5rem' }}>
-            Citation Style (CSL) file (optional):
-          </label>
-          <input
-            id="csl-input"
-            type="file"
-            accept=".csl"
-            onChange={(e) => setCslFile(e.target.files?.[0] || null)}
-          />
-        </div>
+        <StyleSelector
+          onStyleChange={setSelectedStyle}
+        />
 
         <button 
           onClick={handleGenerate} 
-          disabled={isLoading}
+          disabled={isLoading || !jsonFile}
         >
           {isLoading ? 'Generating...' : 'Generate Bibliography'}
         </button>
