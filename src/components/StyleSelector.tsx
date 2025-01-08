@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { registerCustomTemplateFromFile } from '../lib/businessLogic';
+import { registerCustomTemplateFromFile, UnsupportedCslError } from '../lib/businessLogic';
 
 type StyleType = 'built-in' | 'custom';
 type BuiltInStyle = 'apa' | 'vancouver' | 'harvard1';
@@ -13,18 +13,42 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
   const [styleType, setStyleType] = useState<StyleType>('built-in');
   const [selectedStyle, setSelectedStyle] = useState<BuiltInStyle | CustomStyle | null>('apa');
   const [cslFile, setCslFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (styleType === 'built-in') {
+      setError(null);
       onStyleChange(selectedStyle);
     } else if (cslFile) {
-      // Infer the style from the file name
       registerCustomTemplateFromFile(cslFile)
-        .then(onStyleChange);
+        .then(style => {
+          setError(null);
+          onStyleChange(style);
+        })
+        .catch(err => {
+          if (err instanceof UnsupportedCslError) {
+            setError(err.message);
+          } else {
+            setError('Failed to load CSL file. Please ensure it is valid.');
+          }
+          onStyleChange(null);
+        });
     } else {
+      setError(null);
       onStyleChange(null);
     }
   }, [styleType, selectedStyle, cslFile, onStyleChange]);
+
+  const handleStyleTypeChange = (newType: StyleType) => {
+    setStyleType(newType);
+    setError(null);
+    setCslFile(null);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    setCslFile(e.target.files?.[0] || null);
+  };
 
   return (
     <div style={{ marginBottom: '1rem' }}>
@@ -34,7 +58,7 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
       <select
         id="style-type"
         value={styleType}
-        onChange={(e) => setStyleType(e.target.value as StyleType)}
+        onChange={(e) => handleStyleTypeChange(e.target.value as StyleType)}
         style={{ marginBottom: '0.5rem' }}
       >
         <option value="built-in">Built-in Style</option>
@@ -65,8 +89,13 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
             id="csl-input"
             type="file"
             accept=".csl"
-            onChange={(e) => setCslFile(e.target.files?.[0] || null)}
+            onChange={handleFileChange}
           />
+          {error && (
+            <div style={{ color: 'red', marginTop: '0.5rem' }}>
+              {error}
+            </div>
+          )}
         </div>
       )}
     </div>

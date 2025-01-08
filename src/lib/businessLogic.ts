@@ -33,7 +33,7 @@ export async function isDependentCslStyle(templateXml: string): Promise<boolean>
 export async function registerCustomTemplateFromXml(templateXml: string): Promise<string> {
   if (await isDependentCslStyle(templateXml)) {
     throw new UnsupportedCslError(
-      'The provided CSL file appears to be an dependent style. Please use an independent style.'
+      'The provided CSL file appears to be using a dependent style CSL definition. Please use an independent style, which does not include references to other files or URLs.'
     );
   }
   const templateName = 'custom';
