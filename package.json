@@ -15,14 +15,13 @@
   "dependencies": {
     "@citation-js/core": "^0.7.14",
     "@citation-js/plugin-csl": "^0.7.14",
-    "@types/node": "^22.10.5",
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "devDependencies": {
-    "@types/react": "19.0.3"
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.3"
   }
 }
