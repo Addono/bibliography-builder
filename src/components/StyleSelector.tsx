@@ -6,10 +6,20 @@ type StyleType = "built-in" | "custom"
 type BuiltInStyle = "apa" | "vancouver" | "harvard1"
 type CustomStyle = string
 
+/**
+ * Props interface for the StyleSelector component
+ */
 interface StyleSelectorProps {
+  /**
+   * Callback function triggered when the selected style changes
+   * @param newStyle The updated style, or null if no or an invalid style is selected.
+   */
   onStyleChange: (newStyle: string | null) => void
 }
 
+/**
+ * Component for selecting citation styles, either built-in or custom CSL files
+ */
 export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
   const [styleType, setStyleType] = useState<StyleType>("built-in")
   const [selectedStyle, setSelectedStyle] = useState<BuiltInStyle | CustomStyle | null>("apa")
@@ -40,12 +50,20 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
     }
   }, [styleType, selectedStyle, cslFile, onStyleChange])
 
+  /**
+   * Handles changes in citation style type (built-in vs custom)
+   * @param newType - The newly selected style type
+   */
   const handleStyleTypeChange = (newType: StyleType) => {
     setStyleType(newType)
     setError(null)
     setCslFile(null)
   }
 
+  /**
+   * Handles file input changes when uploading custom CSL files
+   * @param e - File input change event
+   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null)
     setCslFile(e.target.files?.[0] || null)
