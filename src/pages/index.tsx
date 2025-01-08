@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 
+import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
 import { Spinner } from "../components/Spinner"
 import StyleSelector from "../components/StyleSelector"
 import { JsonFileSelector } from "../components/JsonFileSelector"
-import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null)
@@ -39,20 +39,25 @@ function HomePage() {
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
       <h1>Bibliography Builder</h1>
       <form onSubmit={(e) => e.preventDefault()}>
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "1fr 2fr",
-          gap: "2rem",
-          marginBottom: "2rem"
-        }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 2fr",
+            gap: "2rem",
+            marginBottom: "2rem",
+          }}
+        >
           <div>
             <h3>Step 1: Select your CSL-JSON file</h3>
             <div>
-              <p>Upload a CSL-JSON file containing your citations. You can export this format from reference managers like Zotero:</p>
+              <p>
+                Upload a CSL-JSON file containing your citations. You can export this format from reference managers
+                like Zotero:
+              </p>
               <ol>
                 <li>Select your references in Zotero</li>
-                <li>Right-click and choose "Export Items..."</li>
-                <li>Select "CSL JSON" as format</li>
+                <li>{'Right-click and choose "Export Items..."'}</li>
+                <li>{'Select "CSL JSON" as format'}</li>
                 <li>Save and upload the file here</li>
               </ol>
             </div>
@@ -64,8 +69,8 @@ function HomePage() {
           <div>
             <h3>Step 2: Choose citation style</h3>
             <p>
-              Select a bibliography style. You can either use one of the built-in styles 
-              (APA, Vancouver, Harvard) or upload your own CSL style file.
+              Select a bibliography style. You can either use one of the built-in styles (APA, Vancouver, Harvard) or
+              upload your own CSL style file.
             </p>
           </div>
           <div>
@@ -81,13 +86,15 @@ function HomePage() {
       )}
 
       {!isLoading && output && (
-        <div style={{ 
-          marginTop: "2rem", 
-          border: "1px solid #ccc", 
-          padding: "2rem",
-          borderRadius: "4px",
-          backgroundColor: "#fff" 
-        }}>
+        <div
+          style={{
+            marginTop: "2rem",
+            border: "1px solid #ccc",
+            padding: "2rem",
+            borderRadius: "4px",
+            backgroundColor: "#fff",
+          }}
+        >
           <div dangerouslySetInnerHTML={{ __html: output }} />
         </div>
       )}

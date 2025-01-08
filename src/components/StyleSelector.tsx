@@ -95,7 +95,7 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
         <FileDropZone
           onFileChange={setCslFile}
           accept=".csl"
-          label="Drop your CSL file here, or click anywhere in this area to select one."
+          label="Drop your CSL file here, or click here to select a file."
         />
       )}
       {error && <div style={{ color: "red", marginTop: "0.5rem" }}>{error}</div>}

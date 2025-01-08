@@ -21,7 +21,7 @@ export function JsonFileSelector({ onFileChange }: JsonFileSelectorProps) {
     <FileDropZone
       onFileChange={onFileChange}
       accept="application/json"
-      label="Drop your CSL-JSON file here, or click anywhere in this area to select one."
+      label="Drop your CSL-JSON file here, or click here to select one."
       validator={isValidCslJson}
     />
   )
