@@ -21,6 +21,7 @@
   display: block;
   color: #666;
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 
 .fileInput {
