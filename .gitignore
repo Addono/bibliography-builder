@@ -250,4 +250,3 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,windows,linux,nextjs,direnv
 
-!.envrc
