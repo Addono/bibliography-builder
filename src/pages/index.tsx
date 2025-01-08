@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Spinner } from '../components/Spinner';
 import {
   UnsupportedCslError,
   groupAndSortCitations,
@@ -10,10 +11,12 @@ function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null);
   const [cslFile, setCslFile] = useState<File | null>(null);
   const [output, setOutput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleGenerate() {
     try {
       if (!jsonFile) return;
+      setIsLoading(true);
       const jsonData = await jsonFile.text();
       const cslData = JSON.parse(jsonData);
       const { groups, sortedKeys } = groupAndSortCitations(cslData);
@@ -31,6 +34,8 @@ function HomePage() {
       } else {
         console.error('Error:', e);
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -62,10 +67,17 @@ function HomePage() {
           />
         </div>
 
-        <button onClick={handleGenerate}>Generate Bibliography</button>
+        <button 
+          onClick={handleGenerate} 
+          disabled={isLoading}
+        >
+          {isLoading ? 'Generating...' : 'Generate Bibliography'}
+        </button>
       </form>
 
-      {output && (
+      {isLoading && <Spinner />}
+
+      {!isLoading && output && (
         <div
           style={{ marginTop: '1rem', border: '1px solid #ccc', padding: '1rem' }}
           dangerouslySetInnerHTML={{ __html: output }}
