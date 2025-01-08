@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 
 import { registerCustomTemplateFromFile, UnsupportedCslError } from "../lib/businessLogic"
+import { FileDropZone } from "./FileDropZone"
 
 type StyleType = "built-in" | "custom"
 type BuiltInStyle = "apa" | "vancouver" | "harvard1"
@@ -60,15 +61,6 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
     setCslFile(null)
   }
 
-  /**
-   * Handles file input changes when uploading custom CSL files
-   * @param e - File input change event
-   */
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError(null)
-    setCslFile(e.target.files?.[0] || null)
-  }
-
   return (
     <div style={{ marginBottom: "1rem" }}>
       <label htmlFor="style-type" style={{ display: "block", marginBottom: "0.5rem" }}>
@@ -100,14 +92,13 @@ export default function StyleSelector({ onStyleChange }: StyleSelectorProps) {
           </select>
         </div>
       ) : (
-        <div>
-          <label htmlFor="csl-input" style={{ display: "block", marginBottom: "0.5rem" }}>
-            Custom CSL file:
-          </label>
-          <input id="csl-input" type="file" accept=".csl" onChange={handleFileChange} />
-          {error && <div style={{ color: "red", marginTop: "0.5rem" }}>{error}</div>}
-        </div>
+        <FileDropZone
+          onFileChange={setCslFile}
+          accept=".csl"
+          label="Drop your CSL file here, or click anywhere in this area to select one."
+        />
       )}
+      {error && <div style={{ color: "red", marginTop: "0.5rem" }}>{error}</div>}
     </div>
   )
 }
