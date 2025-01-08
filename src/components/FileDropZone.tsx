@@ -91,8 +91,12 @@ export function FileDropZone({ onFileChange, accept, label, validator }: FileDro
           onChange={(e) => validateAndProcessFile(e.target.files?.[0] || null)}
           className={styles.fileInput}
         />
-        {fileInputRef.current?.files && fileInputRef.current.files.length > 0 && (
+        {fileInputRef.current?.files && fileInputRef.current.files.length > 0 ? (
           <div>{fileInputRef.current.files[0].name}</div>
+        ) : (
+          <div className={styles.placeholder}>
+            <i>No file selected</i>
+          </div>
         )}
       </div>
       {error && <div className={styles.error}>{error}</div>}
