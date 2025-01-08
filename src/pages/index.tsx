@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Spinner } from '../components/Spinner';
 import {
   UnsupportedCslError,
@@ -13,28 +13,29 @@ function HomePage() {
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleGenerate() {
-    try {
-      if (!jsonFile || !selectedStyle) return;
-      setIsLoading(true);
-      const jsonData = await jsonFile.text();
-      const cslData = JSON.parse(jsonData);
-      const { groups, sortedKeys } = groupAndSortCitations(cslData);
-
-      const templateName: string = selectedStyle;
-
-      const result = await generateBibliography(groups, sortedKeys, templateName);
-      setOutput(result);
-    } catch (e) {
-      if (e instanceof UnsupportedCslError) {
-        console.error('CSL Error:', e.message);
-      } else {
-        console.error('Error:', e);
+  useEffect(() => {
+    async function generateOutput() {
+      try {
+        if (!jsonFile || !selectedStyle) return;
+        setIsLoading(true);
+        const jsonData = await jsonFile.text();
+        const cslData = JSON.parse(jsonData);
+        const { groups, sortedKeys } = groupAndSortCitations(cslData);
+        const result = await generateBibliography(groups, sortedKeys, selectedStyle);
+        setOutput(result);
+      } catch (e) {
+        if (e instanceof UnsupportedCslError) {
+          console.error('CSL Error:', e.message);
+        } else {
+          console.error('Error:', e);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
     }
-  }
+
+    generateOutput();
+  }, [jsonFile, selectedStyle]);
 
   return (
     <div>
@@ -55,13 +56,6 @@ function HomePage() {
         <StyleSelector
           onStyleChange={setSelectedStyle}
         />
-
-        <button 
-          onClick={handleGenerate} 
-          disabled={isLoading || !jsonFile}
-        >
-          {isLoading ? 'Generating...' : 'Generate Bibliography'}
-        </button>
       </form>
 
       {isLoading && <Spinner />}
