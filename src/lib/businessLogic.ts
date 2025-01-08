@@ -1,6 +1,9 @@
 import { Cite, plugins } from "@citation-js/core"
 import "@citation-js/plugin-csl"
 
+/**
+ * Custom error class for unsupported CSL style errors
+ */
 export class UnsupportedCslError extends Error {
   constructor(message: string) {
     super(message)
@@ -8,14 +11,24 @@ export class UnsupportedCslError extends Error {
   }
 }
 
+/**
+ * Groups citation data by archive location and returns sorted groups
+ * @param cslData - Array of citation data objects
+ * @returns Object containing grouped citations and sorted group keys
+ */
 export function groupAndSortCitations(cslData: unknown[]): { groups: Record<string, unknown[]>; sortedKeys: string[] } {
   const groupedData: Record<string, unknown[]> = {}
   cslData.forEach((entry: unknown) => {
-    if (entry.archive_location) {
-      if (!groupedData[entry.archive_location]) {
-        groupedData[entry.archive_location] = []
+    if (typeof entry === "object" && entry["archive_location"]) {
+      const archiveLocation = entry["archive_location"]
+
+      // Initialize the key in the groupedData object if it doesn't exist
+      if (!groupedData[archiveLocation]) {
+        groupedData[archiveLocation] = []
       }
-      groupedData[entry.archive_location].push(entry)
+
+      // Add the entry to the group
+      groupedData[archiveLocation].push(entry)
     }
   })
   return {
@@ -24,12 +37,23 @@ export function groupAndSortCitations(cslData: unknown[]): { groups: Record<stri
   }
 }
 
+/**
+ * Checks if a CSL style is dependent on another style
+ * @param templateXml - The CSL template XML string
+ * @returns Promise resolving to true if the style is dependent, false otherwise
+ */
 export async function isDependentCslStyle(templateXml: string): Promise<boolean> {
   const hasIndependentParent = templateXml.includes('rel="independent-parent"')
   const hasTemplateLink = templateXml.includes('rel="template"')
   return hasIndependentParent && !hasTemplateLink
 }
 
+/**
+ * Registers a custom CSL template from XML string
+ * @param templateXml - The CSL template XML string
+ * @returns Promise resolving to the registered template name
+ * @throws {UnsupportedCslError} When the template is a dependent style
+ */
 export async function registerCustomTemplateFromXml(templateXml: string): Promise<string> {
   if (await isDependentCslStyle(templateXml)) {
     throw new UnsupportedCslError(
@@ -42,11 +66,23 @@ export async function registerCustomTemplateFromXml(templateXml: string): Promis
   return templateName
 }
 
+/**
+ * Registers a custom CSL template from a File object
+ * @param file - The File object containing the CSL template
+ * @returns Promise resolving to the registered template name
+ */
 export async function registerCustomTemplateFromFile(file: File): Promise<string> {
   const templateXml = await file.text()
   return registerCustomTemplateFromXml(templateXml)
 }
 
+/**
+ * Generates a complete HTML document containing the formatted bibliography
+ * @param groups - Object containing grouped citations
+ * @param sortedKeys - Array of sorted group keys
+ * @param templateName - Name of the CSL template to use
+ * @returns Promise resolving to the complete HTML string
+ */
 export async function generateHtml(
   groups: Record<string, unknown[]>,
   sortedKeys: string[],
@@ -83,6 +119,13 @@ export async function generateHtml(
   return output.join("\n")
 }
 
+/**
+ * Generates a bibliography fragment in HTML format
+ * @param groups - Object containing grouped citations
+ * @param sortedKeys - Array of sorted group keys
+ * @param templateName - Name of the CSL template to use
+ * @returns Promise resolving to the HTML bibliography fragment
+ */
 export async function generateBibliography(
   groups: Record<string, unknown[]>,
   sortedKeys: string[],
