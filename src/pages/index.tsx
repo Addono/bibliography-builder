@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react"
 
 import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
+
 import { Spinner } from "../components/Spinner"
 import StyleSelector from "../components/StyleSelector"
 import { JsonFileSelector } from "../components/JsonFileSelector"
+import { CopyButton } from "../components/CopyButton"
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null)
   const [selectedStyle, setSelectedStyle] = useState<string | null>("apa")
-  const [output, setOutput] = useState("")
+  const [output, setOutput] = useState<{ text: string; html: string } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -95,7 +97,10 @@ function HomePage() {
             backgroundColor: "#fff",
           }}
         >
-          <div dangerouslySetInnerHTML={{ __html: output }} />
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
+            <CopyButton content={output} />
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: output.html }} />
         </div>
       )}
     </div>

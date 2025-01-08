@@ -120,29 +120,46 @@ export async function generateHtml(
 }
 
 /**
- * Generates a bibliography fragment in HTML format
+ * Generates bibliography fragments in HTML and plain text formats
  * @param groups - Object containing grouped citations
  * @param sortedKeys - Array of sorted group keys
  * @param templateName - Name of the CSL template to use
- * @returns Promise resolving to the HTML bibliography fragment
+ * @returns Promise resolving to object with HTML and text bibliography fragments
  */
 export async function generateBibliography(
   groups: Record<string, unknown[]>,
   sortedKeys: string[],
   templateName: string,
-): Promise<string> {
-  const outputParts: string[] = []
+): Promise<{ html: string; text: string }> {
+  const htmlParts: string[] = []
+  const textParts: string[] = []
+
   for (const archiveLocation of sortedKeys) {
     const entries = groups[archiveLocation]
     const citation = await Cite.async(entries)
-    const rendered = citation.format("bibliography", {
+
+    const htmlRendered = citation.format("bibliography", {
       format: "html",
       template: templateName,
       lang: "en-US",
     })
-    outputParts.push(`<h2>${archiveLocation}</h2>`)
-    outputParts.push(rendered)
-    outputParts.push("<br>")
+    const textRendered = citation.format("bibliography", {
+      format: "text",
+      template: templateName,
+      lang: "en-US",
+    })
+
+    htmlParts.push(`<h2>${archiveLocation}</h2>`)
+    htmlParts.push(htmlRendered)
+    htmlParts.push("<br>")
+
+    textParts.push(archiveLocation)
+    textParts.push(textRendered)
+    textParts.push("\n")
   }
-  return outputParts.join("\n")
+
+  return {
+    html: htmlParts.join("\n"),
+    text: textParts.join("\n"),
+  }
 }
