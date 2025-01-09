@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import styles from "./index.module.css"
 
 import { UnsupportedCslError, groupAndSortCitations, generateBibliography } from "../lib/businessLogic"
 
@@ -38,17 +39,10 @@ function HomePage() {
   }, [jsonFile, selectedStyle])
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+    <div className={styles.container}>
       <h1>Bibliography Builder</h1>
       <form onSubmit={(e) => e.preventDefault()}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 2fr",
-            gap: "2rem",
-            marginBottom: "2rem",
-          }}
-        >
+        <div className={styles.grid}>
           <div>
             <h3>Step 1: Select your CSL-JSON file</h3>
             <div>
@@ -82,22 +76,14 @@ function HomePage() {
       </form>
 
       {isLoading && (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className={styles.loadingContainer}>
           <Spinner />
         </div>
       )}
 
       {!isLoading && output && (
-        <div
-          style={{
-            marginTop: "2rem",
-            border: "1px solid #ccc",
-            padding: "2rem",
-            borderRadius: "4px",
-            backgroundColor: "#fff",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
+        <div className={styles.outputContainer}>
+          <div className={styles.copyButtonContainer}>
             <CopyButton content={output} />
           </div>
           <div dangerouslySetInnerHTML={{ __html: output.html }} />
