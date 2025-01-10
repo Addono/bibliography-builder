@@ -1,8 +1,8 @@
 # Bibliography Builder
 
-## Description
-
 Bibliography Builder is a web application that allows users to generate formatted bibliographies from CSL-JSON files. Users can upload their citation data and choose from built-in citation styles or upload custom CSL style files.
+
+![Application screenshot](https://github.com/user-attachments/assets/16cb0901-6465-4655-bfa8-6b7854983123)
 
 ## Table of Contents
 
