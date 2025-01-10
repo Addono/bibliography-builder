@@ -19,7 +19,7 @@ Bibliography Builder is a web application that allows users to generate formatte
 ### Steps
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/bibliography-builder.git
+   git clone https://github.com/Addono/bibliography-builder.git
    cd bibliography-builder
    ```
 2. Install dependencies:
