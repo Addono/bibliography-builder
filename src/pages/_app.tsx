@@ -1,6 +1,9 @@
-import type { AppProps } from "next/app"
-import "almond.css/dist/almond.min.css"
 import Head from "next/head"
+import type { AppProps } from "next/app"
+
+import "almond.css/dist/almond.min.css"
+
+import { UpdateNotification } from "../components/UpdateNotification"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <Component {...pageProps} />
+      <UpdateNotification />
     </>
   )
 }
