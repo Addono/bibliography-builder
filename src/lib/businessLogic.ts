@@ -14,21 +14,32 @@ export class UnsupportedCslError extends Error {
 /**
  * Groups citation data by archive location and returns sorted groups
  * @param cslData - Array of citation data objects
+ * @param groupByField - The field to group by
  * @returns Object containing grouped citations and sorted group keys
  */
-export function groupAndSortCitations(cslData: unknown[]): { groups: Record<string, unknown[]>; sortedKeys: string[] } {
+export function groupAndSortCitations(
+  cslData: unknown[],
+  groupByField: string,
+): { groups: Record<string, unknown[]>; sortedKeys: string[] } {
   const groupedData: Record<string, unknown[]> = {}
   cslData.forEach((entry: unknown) => {
-    if (typeof entry === "object" && entry["archive_location"]) {
-      const archiveLocation = entry["archive_location"]
+    if (typeof entry === "object" && entry[groupByField]) {
+      let groupValue = entry[groupByField]
+      if (groupByField === "issued" && groupValue && Array.isArray(groupValue["date-parts"])) {
+        groupValue = groupValue["date-parts"][0][0] // Extract the year
+      } else if (groupValue instanceof Date) {
+        groupValue = groupValue.toLocaleDateString()
+      } else {
+        groupValue = String(groupValue)
+      }
 
       // Initialize the key in the groupedData object if it doesn't exist
-      if (!groupedData[archiveLocation]) {
-        groupedData[archiveLocation] = []
+      if (!groupedData[groupValue]) {
+        groupedData[groupValue] = []
       }
 
       // Add the entry to the group
-      groupedData[archiveLocation].push(entry)
+      groupedData[groupValue].push(entry)
     }
   })
   return {
