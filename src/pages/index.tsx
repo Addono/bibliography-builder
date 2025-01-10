@@ -7,11 +7,12 @@ import { Spinner } from "../components/Spinner"
 import StyleSelector from "../components/StyleSelector"
 import { JsonFileSelector } from "../components/JsonFileSelector"
 import { CopyButton } from "../components/CopyButton"
+import { GroupFieldSelector, GroupField } from "../components/GroupFieldSelector"
 
 function HomePage() {
   const [jsonFile, setJsonFile] = useState<File | null>(null)
   const [selectedStyle, setSelectedStyle] = useState<string | null>("apa")
-  const [groupByField, setGroupByField] = useState<string>("archive_location")
+  const [groupByField, setGroupByField] = useState<GroupField>("archive_location")
   const [output, setOutput] = useState<{ text: string; html: string } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -80,20 +81,7 @@ function HomePage() {
             </p>
           </div>
           <div>
-            <label htmlFor="group-by-field" style={{ display: "block", marginBottom: "0.5rem" }}>
-              Group by:
-            </label>
-            <select
-              id="group-by-field"
-              value={groupByField}
-              onChange={(e) => setGroupByField(e.target.value)}
-              style={{ marginBottom: "0.5rem" }}
-            >
-              <option value="archive_location">Archive Location</option>
-              <option value="author">Author</option>
-              <option value="issued">Year of Issuing</option>
-              <option value="title">Title</option>
-            </select>
+            <GroupFieldSelector value={groupByField} onChange={setGroupByField} />
           </div>
         </div>
       </form>

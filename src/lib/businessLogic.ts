@@ -1,6 +1,8 @@
 import { Cite, plugins } from "@citation-js/core"
 import "@citation-js/plugin-csl"
 
+import { GroupField } from "../components/GroupFieldSelector"
+
 /**
  * Custom error class for unsupported CSL style errors
  */
@@ -19,7 +21,7 @@ export class UnsupportedCslError extends Error {
  */
 export function groupAndSortCitations(
   cslData: unknown[],
-  groupByField: string,
+  groupByField: GroupField,
 ): { groups: Record<string, unknown[]>; sortedKeys: string[] } {
   const groupedData: Record<string, unknown[]> = {}
   cslData.forEach((entry: unknown) => {
