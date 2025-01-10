@@ -12,6 +12,19 @@ const nextConfig = {
   env: {
     BUILD_HASH: buildHash,
   },
+  /**
+   * @param {import('webpack').Configuration} webpackConfig
+   * @returns {import('webpack').Configuration}
+   */
+  webpack(webpackConfig) {
+    return {
+      ...webpackConfig,
+      optimization: {
+        // Disabling minification as it breaks certain the logic in certain CSL styles
+        minimize: false,
+      },
+    }
+  },
 }
 
 export default nextConfig
