@@ -61,13 +61,19 @@ export function FileDropZone({ onFileChange, accept, label, validator }: FileDro
       e.preventDefault()
       setIsDragging(false)
       const file = e.dataTransfer.files[0]
-      if (accept && !file.type.match(accept)) {
+      if (accept && !file.type.match(new RegExp(accept.replace('*', '.*')))) {
         setError(`Please drop a ${accept} file`)
-        return
+        onFileChange(null)
+      } else {
+        const dataTransfer = new DataTransfer()
+        dataTransfer.items.add(file)
+        if (fileInputRef.current) {
+          fileInputRef.current.files = dataTransfer.files
+          validateAndProcessFile(file)
+        }
       }
-      validateAndProcessFile(file)
     },
-    [validateAndProcessFile, accept],
+    [validateAndProcessFile, accept, onFileChange],
   )
 
   return (
