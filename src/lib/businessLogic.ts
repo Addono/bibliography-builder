@@ -60,7 +60,7 @@ export async function registerCustomTemplateFromXml(templateXml: string): Promis
       "The provided CSL file appears to be using a dependent style CSL definition. Please use an independent style, which does not include references to other files or URLs.",
     )
   }
-  const templateName = "custom"
+  const templateName = `custom-${Math.random().toString(36).substring(2, 8)}`
   const config = plugins.config.get("@csl")
   config.templates.add(templateName, templateXml)
   return templateName
